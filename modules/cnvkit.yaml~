@@ -1,0 +1,8 @@
+---
+alpha: 0.005
+ci: 0.005
+lowerDelCutoff: '-1.1'
+lowerDupCutoff: 0.3
+upperDelCutoff: '0'
+upperDupCutoff: '0.7'
+upperdelcutoff: '-0.4'

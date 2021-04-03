@@ -1,0 +1,6 @@
+---
+lowerdelcutoff: '0.35'
+lowerdupcutoff: '1.30'
+mincorr: '0.91'
+minzscore: '2.5'
+upperdelcutoff: '0.7'

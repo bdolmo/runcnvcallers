@@ -1,0 +1,6 @@
+---
+lowerDelCutoff: '0.35'
+lowerDupCutoff: '1.30'
+minCorrelation: '0.91'
+minZscore: '2.5'
+upperDelCutoff: '0.65'

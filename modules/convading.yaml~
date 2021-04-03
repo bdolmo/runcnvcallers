@@ -1,0 +1,8 @@
+---
+percentageLessReliableTargets: '20'
+ratioCutOffHigh: '1.4'
+ratioCutOffLow: 0.65
+regionThreshold: '20'
+sampleRatioScore: '0.09'
+zScoreCutOffHigh: '3'
+zScoreCutOffLow: '-3'
