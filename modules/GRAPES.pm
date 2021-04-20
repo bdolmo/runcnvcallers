@@ -28,11 +28,11 @@ sub callCNV {
 
     GRAPES::cleanData("$outDir/GRAPES", $bed);
 
-    my $cmd = "$::Callers{GRAPES} wes -all --noofftarget --nobreakpoint --lowerdupcutoff $params{lowerdupcutoff}"
+    my $cmd = "$::Callers{GRAPES} wes -all --noofftarget --lowerdupcutoff $params{lowerdupcutoff}"
     . " --lowerdelcutoff $params{lowerdelcutoff} --upperdelcutoff $params{upperdelcutoff}"
     . " --mincorr $params{mincorr} --minsvsize 15 --minzscore $params{minzscore} "
     . " --pooled $inDir --bed $bed --genome $genome --outdir $outDir -t 4";
-
+    print "$cmd\n";
     system($cmd);
 
 }

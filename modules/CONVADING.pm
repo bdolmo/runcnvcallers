@@ -41,10 +41,9 @@ my %params = %{ $convadingConfig };
  mkdir $convadingOut;
 
  # Extract counts and normalize
-
-  my ($normalized) = glob ("$convadingOut/StartWithBam/*normalized.coverage.txt");
+ my ($normalized) = glob ("$convadingOut/StartWithBam/*normalized.coverage.txt");
  if (!-e $normalized) {
-	$cmd = "perl $::Callers{CONVADING} -mode StartWithBam -inputDir $inDir -controlsDir $inDir" 
+	$cmd = "perl $::Callers{CONVADING} -mode StartWithBam -inputDir $inDir -controlsDir $convadingOut/controls" 
 	." -useSampleAsControl -outputDir $convadingOut/StartWithBam -bed $convading_name";
 	print "$cmd\n";
 	system($cmd);
@@ -54,25 +53,25 @@ my %params = %{ $convadingConfig };
  $cmd = "perl $::Callers{CONVADING} -mode StartWithMatchScore -inputDir $convadingOut/StartWithBam -controlsDir "
  . " $convadingOut/controls -outputDir $convadingOut/StartWithMatchScore";
  print "$cmd\n";
- #system($cmd);
+ system($cmd);
  
  # CNV detection
  $cmd = "perl $::Callers{CONVADING} -mode StartWithBestScore -regionThreshold $params{regionThreshold} -ratioCutOffLow $params{ratioCutOffLow} -ratioCutOffHigh $params{ratioCutOffHigh}" 
  . " -zScoreCutOffHigh $params{zScoreCutOffHigh} -zScoreCutOffLow $params{zScoreCutOffLow} -inputDir $convadingOut/StartWithMatchScore -outputDir $convadingOut/StartWithBestScore $::devNull";
- #system($cmd); 
+ system($cmd); 
  print "$cmd\n";
 
  # GenerateTargetQcList
  $cmd = "perl $::Callers{CONVADING} -mode GenerateTargetQcList -inputDir $convadingOut/StartWithBam "
  . " -controlsDir $convadingOut/controls -outputDir $convadingOut $::devNull";
  print "$cmd\n";
- #system($cmd);
+ system($cmd);
 
  # CreateFinalList
  $cmd = "perl $::Callers{CONVADING} -mode CreateFinalList -percentageLessReliableTargets 20 -inputDir $convadingOut/StartWithBestScore "
  . " -targetQcList $convadingOut/targetQcList.txt -outputDir $convadingOut";
  print "$cmd\n";
- #system($cmd);
+ system($cmd);
 
  my @totalListFiles = glob("$convadingOut/StartWithBestScore/*totallist.txt");
 

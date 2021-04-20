@@ -117,14 +117,17 @@ Help () if (@ARGV < 1 or !GetOptions(
     exit;
  }
  mkdir $outDir;
+ if ($doGRAPES) {
+    GRAPES::callCNV($inDir, $bed, $genome, $outDir);
+ }
+ if ($doPANELCNMOPS) {
+    PANELCNMOPS::callCNV($inDir, $bed, $genome, $outDir);
+ } 
  if ($doDECON) {
     DECON::callCNV($inDir, $bed, $genome, $outDir);
  }
  if ($doCNVKIT) {
     CNVKIT::callCNV($inDir, $bed, $genome, $outDir);
- }
- if ($doGRAPES) {
-    GRAPES::callCNV($inDir, $bed, $genome, $outDir);
  }
  if ($doCONVADING) {
     CONVADING::callCNV($inDir, $bed, $genome, $outDir, $controlDir);
@@ -138,9 +141,7 @@ Help () if (@ARGV < 1 or !GetOptions(
  if ($doBREAKMER) {
     BREAKMER::callSV($inDir, $bed, $genome, $outDir);
  }
- if ($doPANELCNMOPS) {
-    PANELCNMOPS::callCNV($inDir, $bed, $genome, $outDir);
- } 
+
   #doAtlasCNV($inDir, $bed, $genome, $outDir);
 
 

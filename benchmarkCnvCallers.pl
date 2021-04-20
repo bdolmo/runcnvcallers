@@ -250,22 +250,41 @@ sub main {
     }
     $workbook->close();
 
+	open DATA, ">", "$outDir/data.txt";
+	print DATA "Caller\tMetric\tValue\n";
 
 	foreach my $caller ( natsort keys %HoC ) {
-		print " INFO: $caller\tTP:$HoC{$caller}{TP}\tFP:$HoC{$caller}{FP}\n";   
-	} 
+		my $precision = sprintf "%.2f", 100*($HoC{$caller}{TP}/($HoC{$caller}{TP}+$HoC{$caller}{FP}));
+		$HoC{$caller}{PRECISION}   = $precision;
+		$HoC{$caller}{SENSITIVITY} = sprintf "%.2f", 100*($HoC{$caller}{TP}/$total_cnv_rois);
+		print " INFO: $caller\tTP:$HoC{$caller}{TP}\tFP:$HoC{$caller}{FP}\tPrecision:$precision\n"; 
+		print DATA "$caller\tRecall\t$HoC{$caller}{SENSITIVITY}\n";
+		print DATA "$caller\tPrecision\t$HoC{$caller}{PRECISION}\n";
+	}
+	close DATA;
 
-	# foreach my $sample ( natsort keys %sampleKnownCnv ) {
-	# 	foreach my $call ( $sampleKnownCnv{$sample} }) {
-	# 		next if $call eq 'None';
-	# 		foreach my $caller ( natsort keys %HoC ){
-	# 			print "$sample $call $caller $tpResults{$sample}{$call}{$caller}\n"
-	# 		}	
-	# 	} 
-	# } 
-
-
+	plotBench("$outDir/data.txt");
 }
+
+##############################
+sub plotBench {
+	my $data = shift;
+	open (R, ">", "$outDir/benchplot.R");
+	print R "library(ggplot2)\n";
+	print R "library(ggpattern)\n";
+	print R "library(ggsci)\n";
+	print R "mydata<-read.table(file=\"$data\", sep=\"\t\", header=TRUE)\n";
+	print R "attach(mydata)\n";
+	print R "png(\"$outDir/out.png\", width=1400, height=800, res=200)\n";
+	print R "yvalues<-seq(from=0, to=100, by=20)\n"; 
+	print R "myplot<-ggplot(mydata, aes(x=Caller,y=Value,fill=Caller, alpha=Metric, pattern=Metric))+geom_bar_pattern(color = \"black\", pattern_fill = \"black\",pattern_angle = 45,pattern_density = 0.05,pattern_spacing = 0.025,pattern_key_scale_factor = 0.6
+, stat=\"identity\", position=position_dodge()) + scale_pattern_manual(values = c(Recall = \"none\", Precision = \"stripe\")) + scale_fill_npg()\n";
+	print R "myplot+theme_bw()+scale_alpha_manual(values = c(Recall = 1, Precision = 0.4))\n";
+	print R "dev.off()\n"; 
+	close R;
+	`Rscript $outDir/benchplot.R`;
+} 
+
 
 ##############################
 sub doBenchmarkt {
